@@ -196,6 +196,28 @@ body {
 .profiletable tr td {
     padding: 5px;
 }
+.containfp{
+    width: 350px;
+    margin: 50px auto;
+    border: white 1px solid;
+    border-radius: 5px;
+}
+.forgetpass{
+    display: flex;
+    flex-direction: column;
+}
+.forgetpass img{
+    width: 35%;
+    margin: 10px auto;
+}
+.forgetpass input{
+    width: 250px;
+    box-sizing: border-box;
+    margin: 5px auto;
+}
+.forgetpass button{
+    margin: 5px auto;
+}
 
 footer {
     margin-top: 10px;
