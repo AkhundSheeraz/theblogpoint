@@ -33,12 +33,12 @@ if (isset($_POST['name'])) {
             $stmt->execute();
             $hashedlink = "http://blogsite.test/?getvlink=" . $hashed_password . "&vmail=" . $usermail;
             $linkmessage = "verify your E-mail for the registration";
-            $verify = new mailer($usermail, $hashedlink, $linkmessage);
-            $verify->send_mail();
             echo json_encode([
                 "status" => true,
                 "message" => 'Registration Successful'
             ]);
+            $verify = new mailer($usermail, $hashedlink, $linkmessage);
+            $verify->send_mail();
             die;
         } else {
             echo json_encode([
@@ -107,12 +107,12 @@ if (isset($_POST['mail']) && isset($_POST['process'])) {
     $hashingmail = password_hash($mailhere, PASSWORD_DEFAULT);
     $resetlink = "http://blogsite.test/forgetpass.php?rlink=" . $hashingmail . "&umail=" . $mailhere;
     $resetmessage = "reset you password for account";
-    $reset = new mailer($mailhere, $resetlink, $resetmessage);
-    $reset->send_mail();
     echo json_encode([
         "status" => true,
         "message" => "recovery email sent"
     ]);
+    $reset = new mailer($mailhere, $resetlink, $resetmessage);
+    $reset->send_mail();
     die;
 }
 

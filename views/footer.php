@@ -107,21 +107,6 @@
                 dblog.append(res);
                 $('#staticBackdrop').modal('hide');
             }
-            // res = JSON.parse(res);
-            // if (res.status == true) {
-            //     const head = $('#staticBackdropLabel');
-            //     const bheading = $('#bloghead');
-            //     if (!form.hasClass('hide') && bheading.hasClass('text-white')) {
-            //         form.addClass('hide');
-            //         bheading.removeClass('text-white');
-            //         bheading.addClass('msgsuccess');
-            //     }
-
-            //     head.html(res.message);
-            //     document.getElementById('blogpost').reset();
-            // } else {
-            //     console.log("error");
-            // }
         })
     })
 
@@ -187,15 +172,18 @@
 
     $("#forgotcode").on("click", () => {
         const thismail = $("input[name=username]").val();
-        const objdata = {mail:thismail, process:"code forget"};
+        const objdata = {
+            mail: thismail,
+            process: "code forget"
+        };
         if (thismail.length > 0) {
             $.ajax({
                 type: "POST",
                 url: "index.php",
                 data: objdata
-            }).done(res=>{
+            }).done(res => {
                 res = JSON.parse(res);
-                if(res.status == true){
+                if (res.status == true) {
                     const msg = $("#login_error");
                     msg.addClass('msgsuccess')
                     msg.html(res.message);
@@ -234,6 +222,40 @@
                 setTimeout(() => {
                     err.empty();
                 }, 3000);
+            }
+        });
+    });
+
+    $("#resetcode").on("submit", (event) => {
+        event.preventDefault();
+        const resetermail = $(".setmail").text()
+        const obj = {
+            headmail: resetermail
+        }
+        const form = $("#resetcode")
+        const data = form.serialize() + '&' + $.param(obj);
+        $.ajax({
+            type: "POST",
+            url: "forgetpass.php",
+            data: data
+        }).done(res => {
+            res = JSON.parse(res);
+            const codemsg = $("#codechangemsg");
+            if(res.type == true){
+                codemsg.addClass("msgsuccess");
+                codemsg.html(res.message);
+                setTimeout(()=>{
+                    codemsg.removeClass("msgsuccess");
+                    codemsg.empty();
+                },3000);
+                document.getElementById("resetcode").reset();
+            }else{
+                codemsg.addClass("msgfail");
+                codemsg.html(res.message);
+                setTimeout(()=>{
+                    codemsg.removeClass("msgfail");
+                    codemsg.empty();
+                },3000);
             }
         });
     });
