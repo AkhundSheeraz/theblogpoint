@@ -12,11 +12,13 @@ class mailer
 {
     public $getmail;
     public $vlink;
+    public $vmessage;
 
-    function __construct($getmail, $vlink)
+    function __construct($getmail, $vlink, $vmessage)
     {
         $this->mail = $getmail;
         $this->link = $vlink;
+        $this->message = $vmessage;
     }
     function send_mail()
     {
@@ -38,7 +40,7 @@ class mailer
             $mail->setFrom('tech@blogpoint.com', 'tech@blogpoint');
             $mail->addAddress($this->mail);                                   // add a recipient
 
-            $vmailcontent = "<p><strong>Dear user</strong> please click this link ". $this->link ." to verify your e-mail for the registration at blogpoint</p>";
+            $vmailcontent = "<p><strong>Dear user</strong> please click this link ". $this->link ." to ". $this->message  ." at blogpoint</p>";
 
             //Content
             $mail->isHTML(true);                                              //Set email format to HTML

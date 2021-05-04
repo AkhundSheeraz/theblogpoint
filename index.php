@@ -32,7 +32,8 @@ if (isset($_POST['name'])) {
             $stmt->bind_param("ssssi", $username, $usermail, $hashed_password, $gender_value, $bool);
             $stmt->execute();
             $hashedlink = "http://blogsite.test/?getvlink=" . $hashed_password . "&vmail=" . $usermail;
-            $verify = new mailer($usermail, $hashedlink);
+            $linkmessage = "verify your E-mail for the registration";
+            $verify = new mailer($usermail, $hashedlink, $linkmessage);
             $verify->send_mail();
             echo json_encode([
                 "status" => true,
@@ -101,6 +102,19 @@ if (isset($_POST['username'])) {
         die;
     }
 }
+if (isset($_POST['mail']) && isset($_POST['process'])) {
+    $mailhere = $_POST['mail'];
+    $hashingmail = password_hash($mailhere, PASSWORD_DEFAULT);
+    $resetlink = "http://blogsite.test/forgetpass.php?rlink=" . $hashingmail . "&umail=" . $mailhere;
+    $resetmessage = "reset you password for account";
+    $reset = new mailer($mailhere, $resetlink, $resetmessage);
+    $reset->send_mail();
+    echo json_encode([
+        "status" => true,
+        "message" => "recovery email sent"
+    ]);
+    die;
+}
 
 if (isset($_POST['status'])) {
     session_start();
@@ -144,7 +158,7 @@ if (isset($_POST['status'])) {
     <?php include './views/footer.php' ?>
     <?php
     if (isset($_GET['getvlink']) && !empty($_GET['getvlink']) && isset($_GET['vmail']) && !empty($_GET['vmail'])) {
-    
+
         $getmail = $_GET['vmail'];
         $bool = 1;
         $sql = "UPDATE `users` SET `verification` = ? WHERE `usermail` = '$getmail'";
@@ -152,7 +166,7 @@ if (isset($_POST['status'])) {
         $stmt->bind_param("i", $bool);
         $stmt->execute();
         $effect = $stmt->affected_rows;
-        if($effect == 1){
+        if ($effect == 1) {
             echo "<script>activation();</script>";
         }
     }

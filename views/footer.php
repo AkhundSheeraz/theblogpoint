@@ -186,10 +186,28 @@
     })
 
     $("#forgotcode").on("click", () => {
-        const thismail = $("input[name=username]");
-        if (thismail.val().length > 0) {
-            console.log(thismail);
+        const thismail = $("input[name=username]").val();
+        const objdata = {mail:thismail, process:"code forget"};
+        if (thismail.length > 0) {
+            $.ajax({
+                type: "POST",
+                url: "index.php",
+                data: objdata
+            }).done(res=>{
+                res = JSON.parse(res);
+                if(res.status == true){
+                    const msg = $("#login_error");
+                    msg.addClass('msgsuccess')
+                    msg.html(res.message);
+                    setTimeout(() => {
+                        msg.removeClass('msgsuccess')
+                        msg.empty();
+                    }, 3000);
+                    document.getElementById('login').reset();
+                };
+            })
         } else {
+            const thismail = $("input[name=username]")
             thismail.addClass("phwarn");
             thismail.attr("placeholder", "Email Required!");
             setTimeout(() => {
