@@ -260,16 +260,25 @@
         });
     });
 
-    function activation() {
+    function activation(msghere) {
         $(document).ready(function() {
             $('#exampleModal1').modal('show');
             const msg = $('#login_error');
-            msg.addClass('msgsuccess');
-            msg.html("account activated please login");
-            setTimeout(() => {
-                msg.removeClass('msgsuccess');
-                msg.empty();
-            }, 4000);
+            if(msghere.type == true){
+                msg.addClass('msgsuccess');
+                msg.html(msghere.msg);
+                setTimeout(() => {
+                    msg.removeClass('msgsuccess');
+                    msg.empty();
+                }, 4000);
+            }else{
+                msg.addClass('msgfail');
+                msg.html(msghere.msg);
+                setTimeout(() => {
+                    msg.removeClass('msgfail');
+                    msg.empty();
+                }, 4000);
+            }
         })
     }
 </script>

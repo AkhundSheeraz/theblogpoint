@@ -27,11 +27,12 @@ if (isset($_POST['name'])) {
     } else {
         if ($password == $password2) {
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $hashed_mail = password_hash($usermail, PASSWORD_DEFAULT);
             $sql = "INSERT INTO users (`username`,`usermail`,`password`,`gender`, `verification`) VALUES (?,?,?,?,?)";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("ssssi", $username, $usermail, $hashed_password, $gender_value, $bool);
             $stmt->execute();
-            $hashedlink = "http://blogsite.test/?getvlink=" . $hashed_password . "&vmail=" . $usermail;
+            $hashedlink = "http://blogsite.test/?getvlink=" . $hashed_mail . "&vmail=" . $usermail;
             $linkmessage = "verify your E-mail for the registration";
             echo json_encode([
                 "status" => true,
@@ -158,16 +159,32 @@ if (isset($_POST['status'])) {
     <?php include './views/footer.php' ?>
     <?php
     if (isset($_GET['getvlink']) && !empty($_GET['getvlink']) && isset($_GET['vmail']) && !empty($_GET['vmail'])) {
-
+        $getvlink = $_GET['getvlink'];
         $getmail = $_GET['vmail'];
-        $bool = 1;
-        $sql = "UPDATE `users` SET `verification` = ? WHERE `usermail` = '$getmail'";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $bool);
-        $stmt->execute();
-        $effect = $stmt->affected_rows;
-        if ($effect == 1) {
-            echo "<script>activation();</script>";
+        if (password_verify($getmail, $getvlink)) {
+            $bool = 1;
+            $sql = "UPDATE `users` SET `verification` = ? WHERE `usermail` = '$getmail'";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $bool);
+            $stmt->execute();
+            $effect = $stmt->affected_rows;
+            if ($effect == 1) {
+                echo "<script>
+                const success = {type:true, msg:'Account activated please login'};
+                activation(success);
+                </script>";
+            } else {
+                echo "Acitvation failed";
+                die;
+            }
+        } else {
+            echo "
+            <script>
+            const err = {type:false, msg:'Invalid link'};
+            activation(err);
+            </script>
+            ";
+            die;
         }
     }
     ?>
