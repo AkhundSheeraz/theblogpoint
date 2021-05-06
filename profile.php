@@ -2,7 +2,7 @@
 <?php
 if (isset($_SESSION['currentUser']) && !empty($_SESSION['currentUser'])) {
     $sql = "SELECT `idusers`, `gender`,`userdp` FROM users WHERE username = ?";
-    $stmt = $conn->prepare($sql);
+    $stmt = DB_connect::getConn()->prepare($sql);
     $stmt->bind_param('s', $_SESSION['currentUser']);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -54,7 +54,7 @@ if (isset($_FILES['filename'])) {
                     "message" => $path
                 ]);
                 $sql = "UPDATE `users` SET `userdp` = ? WHERE `idusers` = " . $rows["idusers"];
-                $stmt = $conn->prepare($sql);
+                $stmt = DB_connect::getConn()->prepare($sql);
                 $stmt->bind_param('s', $path);
                 $stmt->execute();
                 die;
@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === "DELETE") {
     $check = file_exists($data);
     if (!is_null($rows['userdp']) && $check == true) {
         $sql = "UPDATE `users` SET `userdp` = NULL WHERE `idusers` = ?";
-        $stmt = $conn->prepare($sql);
+        $stmt = DB_connect::getConn()->prepare($sql);
         $stmt->bind_param('i', $rows["idusers"]);
         $stmt->execute();
         unlink($data);

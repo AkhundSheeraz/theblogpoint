@@ -1,5 +1,6 @@
 <?php
 require './connection.php';
+require './mailer.php';
 
 class User
 {
@@ -77,24 +78,12 @@ class User
             return false;
         }
     }
+
+    function send_vemail($message){
+        $hashedmail = password_hash($this->email, PASSWORD_DEFAULT);
+        $link = "http://blogsite.test/?getvlink=" . $hashedmail . "&vmail=" . $this->email;
+        $mailing = new mailer($this->email,$link,$message);
+        $mailing->send_mail();
+    }
 }
 
-// $name = "sheeraz";
-// $newmail = "akhund.sheeraz@gmail.com";
-// $newcode = "code";
-// $newcode2 = "code";
-// $gender = "male";
-// $boolen = 0;
-
-// $createuser = new User($newmail, $newcode);
-// $mailexist = $createuser->mail_indb();
-// if ($mailexist == true) {
-//     $verification = $createuser->verify_mail();
-//     if($verification == true){
-//         echo "user is verfied";
-//     }else{
-//         echo "unverified email";
-//     }
-// } else {
-//     echo "user doesnt exist";
-// }

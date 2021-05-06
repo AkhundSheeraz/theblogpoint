@@ -7,7 +7,7 @@ if (isset($_POST['recode']) && isset($_POST['recode2']) && isset($_POST['headmai
     if ($passcode == $passcode2) {
         $encode_pass = password_hash($passcode, PASSWORD_DEFAULT);
         $sql = "UPDATE `users` SET `password` = ? WHERE `usermail` = '$mailhere'";
-        $stmt = $conn->prepare($sql);
+        $stmt = DB_connect::getConn()->prepare($sql);
         $stmt->bind_param("s", $encode_pass);
         $stmt->execute();
         $post_effect = $stmt->affected_rows;
@@ -37,7 +37,7 @@ if (isset($_GET['rlink']) && !empty($_GET['rlink']) && isset($_GET['umail']) && 
     $getmail = $_GET['umail'];
     $gethashlink = $_GET['rlink'];
     $sql = "SELECT `usermail` FROM `users` WHERE `usermail` = ?";
-    $stmt = $conn->prepare($sql);
+    $stmt = DB_connect::getConn()->prepare($sql);
     $stmt->bind_param("s", $getmail);
     $stmt->execute();
     $result = $stmt->get_result();
