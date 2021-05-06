@@ -1,43 +1,44 @@
 <?php
+require './connection.php';
 
-class User
+class User extends DB_connect
 {
     public $usermail;
     public $userpass;
 
     function __construct($usermail, $userpass)
     {
-        $this->mail = $usermail;
-        $this->pass = $userpass;
+        $this->email = $usermail;
+        $this->passcode = $userpass;
+
     }
 
     function mail_indb()
     {
-        require './connection.php';
-        $sql = "SELECT usermail FROM users WHERE usermail = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("s", $this->mail);
+        $sql = "SELECT `usermail` FROM `users` WHERE `usermail` = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("s", $this->email);
         $stmt->execute();
         $result = $stmt->get_result();
         $count = $result->num_rows;
-        if($count == 1){
+        if ($count == 1) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    function store_indb($name,$password2,$gender_value,$bool){
-        require './connection.php';
-        if($password2 == $this->pass){
-            $hashed_password = password_hash($this->pass, PASSWORD_DEFAULT);
+    function store_indb($name, $password2, $gender_value, $bool)
+    {
+        if ($password2 == $this->passcode) {
+            $hashed_password = password_hash($this->passcode, PASSWORD_DEFAULT);
             $sql = "INSERT INTO users (`username`,`usermail`,`password`,`gender`, `verification`) VALUES (?,?,?,?,?)";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ssssi", $name, $this->mail, $hashed_password, $gender_value, $bool);
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("ssssi", $name, $this->email, $hashed_password, $gender_value, $bool);
             $stmt->execute();
-            if($stmt->affected_rows == 1){
+            if ($stmt->affected_rows == 1) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         }
@@ -51,15 +52,15 @@ $newcode2 = "code";
 $gender = "male";
 $boolen = 0;
 
-$createuser = new User($newmail,$newcode);
+$createuser = new User($newmail, $newcode);
 $mailexist = $createuser->mail_indb();
-if($mailexist == true){
+if ($mailexist == true) {
     echo "usermail exists!";
-}else{
-    $usercreated = $createuser->store_indb($name,$newcode2,$gender,$boolen);
-    if($usercreated == true){
+} else {
+    $usercreated = $createuser->store_indb($name, $newcode2, $gender, $boolen);
+    if ($usercreated == true) {
         echo "user created data insertion success";
-    }else{
+    } else {
         echo "user creation failed";
     }
 }
