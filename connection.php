@@ -3,20 +3,32 @@ session_start();
 
 class DB_connect
 {
-    protected $host = "localhost";
-    protected $user = "root";
-    protected $pass = "admin";
-    protected $db = "blogsite_db";
+    private static $host = "localhost";
+    private static $user = "root";
+    private static $pass = "admin";
+    private static $db = "blogsite_db";
 
-    public $conn = null;
+    private static $conn = null;
 
-    public function __construct()
+    // private final function __construct()
+    // {
+    //     mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+    //     $this->conn = mysqli_connect($this->host, $this->user, $this->pass, $this->db);
+    //     if ($this->conn->connect_error) {
+    //         echo "Fail" . $this->conn->connect_error;
+    //     }
+    // }
+
+    public static function getConn()
     {
-        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-        $this->conn = mysqli_connect($this->host,$this->user,$this->pass,$this->db);
-        if($this->conn->connect_error){
-            echo "Fail". $this->conn->connect_error;
+        if (self::$conn == null) {
+            mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+            self::$conn = mysqli_connect(self::$host, self::$user, self::$pass, self::$db);
+            if (self::$conn->connect_error) {
+                echo "Fail" . self::$conn->connect_error;
+            }
         }
+        return self::$conn;
     }
 }
 

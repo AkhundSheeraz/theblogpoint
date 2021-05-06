@@ -1,7 +1,7 @@
 <?php
 require './connection.php';
 
-class User extends DB_connect
+class User
 {
     public $usermail;
     public $userpass;
@@ -10,13 +10,12 @@ class User extends DB_connect
     {
         $this->email = $usermail;
         $this->passcode = $userpass;
-
     }
 
     function mail_indb()
     {
         $sql = "SELECT `usermail` FROM `users` WHERE `usermail` = ?";
-        $stmt = $this->conn->prepare($sql);
+        $stmt = DB_connect::getConn()->prepare($sql);
         $stmt->bind_param("s", $this->email);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -33,7 +32,7 @@ class User extends DB_connect
         if ($password2 == $this->passcode) {
             $hashed_password = password_hash($this->passcode, PASSWORD_DEFAULT);
             $sql = "INSERT INTO users (`username`,`usermail`,`password`,`gender`, `verification`) VALUES (?,?,?,?,?)";
-            $stmt = $this->conn->prepare($sql);
+            $stmt = DB_connect::getConn()->prepare($sql);
             $stmt->bind_param("ssssi", $name, $this->email, $hashed_password, $gender_value, $bool);
             $stmt->execute();
             if ($stmt->affected_rows == 1) {
