@@ -1,7 +1,7 @@
 <?php require './connection.php' ?>
 <?php $blogid = $_GET['blogNo'];
 $sql = "SELECT `blog_title`, `blog_content` FROM blogs WHERE blog_no = ?";
-$stmt = $conn->prepare($sql);
+$stmt = DB_connect::getConn()->prepare($sql);
 $stmt->bind_param('i', $blogid);
 $stmt->execute();
 $result = $stmt->get_result();

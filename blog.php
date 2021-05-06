@@ -1,7 +1,7 @@
 <?php require './connection.php' ?>
 <?php
 $sql = "SELECT * FROM blogs";
-$stmt = $conn->prepare($sql);
+$stmt = DB_connect::getConn()->prepare($sql);
 $stmt->execute();
 $result = $stmt->get_result();
 $countrow = $result->num_rows;

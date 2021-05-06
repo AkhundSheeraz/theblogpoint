@@ -40,6 +40,8 @@ class User
             } else {
                 return false;
             }
+        }else{
+            return false;
         }
     }
 
@@ -77,22 +79,22 @@ class User
     }
 }
 
-$name = "sheeraz";
-$newmail = "akhund.sheeraz@gmail.com";
-$newcode = "code";
-$newcode2 = "code";
-$gender = "male";
-$boolen = 0;
+// $name = "sheeraz";
+// $newmail = "akhund.sheeraz@gmail.com";
+// $newcode = "code";
+// $newcode2 = "code";
+// $gender = "male";
+// $boolen = 0;
 
-$createuser = new User($newmail, $newcode);
-$mailexist = $createuser->mail_indb();
-if ($mailexist == true) {
-    echo "usermail exists!";
-} else {
-    $usercreated = $createuser->store_indb($name, $newcode2, $gender, $boolen);
-    if ($usercreated == true) {
-        echo "user created data insertion success";
-    } else {
-        echo "user creation failed";
-    }
-}
+// $createuser = new User($newmail, $newcode);
+// $mailexist = $createuser->mail_indb();
+// if ($mailexist == true) {
+//     $verification = $createuser->verify_mail();
+//     if($verification == true){
+//         echo "user is verfied";
+//     }else{
+//         echo "unverified email";
+//     }
+// } else {
+//     echo "user doesnt exist";
+// }

@@ -1,7 +1,7 @@
 <?php require './connection.php' ?>
 <?php
 $sql = "SELECT `blog_no`, `blog_title`, `blog_content` FROM blogs INNER JOIN users ON blogs.idusers = users.idusers WHERE usermail = ? ";
-$stmt = $conn->prepare($sql);
+$stmt = DB_connect::getConn()->prepare($sql);
 $stmt->bind_param('s', $_SESSION['activeUsermail']);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -13,13 +13,10 @@ $count = $result->num_rows;
 if (isset($_POST['id'])) {
     $blogid = $_POST['id'];
     $sql = "DELETE blogs.* FROM blogs INNER JOIN users ON blogs.idusers = users.idusers WHERE usermail = ? AND blog_no = ?";
-    $stmt = $conn->prepare($sql);
+    $stmt = DB_connect::getConn()->prepare($sql);
     $stmt->bind_param('si', $_SESSION['activeUsermail'], $blogid);
     $success = $stmt->execute();
     $effected = $stmt->affected_rows;
-    // $result = $stmt->get_result();
-    // $row = $result->fetch_assoc();
-    // $count = $result->num_rows;
     if($success == true){
         echo json_encode([
            'status'=> true, 

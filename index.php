@@ -1,4 +1,5 @@
 <?php
+require './classes.php';
 require './mailer.php';
 ?>
 
@@ -11,36 +12,24 @@ if (isset($_POST['name'])) {
     $gender_value = $_POST['Gender'];
     $bool = 0;
 
-    $findmail = "SELECT usermail FROM users WHERE usermail = ?";
-    $stmt = $conn->prepare($findmail);
-    $stmt->bind_param("s", $usermail);
-    $stmt->execute();
-    $stmt->store_result();
-    if ($stmt->num_rows() == 1) {
+    $create_user = new User($usermail,$password);
+    $user_exists = $create_user->mail_indb();
+    if($user_exists == true){
         echo json_encode([
             "status" => false,
             "number" => 0,
             "message" => 'Email already exists'
         ]);
         die;
-    } else {
-        if ($password == $password2) {
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-            $hashed_mail = password_hash($usermail, PASSWORD_DEFAULT);
-            $sql = "INSERT INTO users (`username`,`usermail`,`password`,`gender`, `verification`) VALUES (?,?,?,?,?)";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ssssi", $username, $usermail, $hashed_password, $gender_value, $bool);
-            $stmt->execute();
-            $hashedlink = "http://blogsite.test/?getvlink=" . $hashed_mail . "&vmail=" . $usermail;
-            $linkmessage = "verify your E-mail for the registration";
+    }else{
+        $registration = $create_user->store_indb($username,$password2,$gender_value,$bool);
+        if($registration == true){
             echo json_encode([
                 "status" => true,
                 "message" => 'Registration Successful'
             ]);
-            $verify = new mailer($usermail, $hashedlink, $linkmessage);
-            $verify->send_mail();
-            die;
-        } else {
+                die;
+        }else{
             echo json_encode([
                 "status" => false,
                 "number" => 1,
@@ -49,38 +38,58 @@ if (isset($_POST['name'])) {
             die;
         }
     }
+
+    // $findmail = "SELECT usermail FROM users WHERE usermail = ?";
+    // $stmt = $conn->prepare($findmail);
+    // $stmt->bind_param("s", $usermail);
+    // $stmt->execute();
+    // $stmt->store_result();
+    // if ($stmt->num_rows() == 1) {
+    //     echo json_encode([
+    //         "status" => false,
+    //         "number" => 0,
+    //         "message" => 'Email already exists'
+    //     ]);
+    //     die;
+    // } else {
+    //     if ($password == $password2) {
+    //         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    //         $hashed_mail = password_hash($usermail, PASSWORD_DEFAULT);
+    //         $sql = "INSERT INTO users (`username`,`usermail`,`password`,`gender`, `verification`) VALUES (?,?,?,?,?)";
+    //         $stmt = $conn->prepare($sql);
+    //         $stmt->bind_param("ssssi", $username, $usermail, $hashed_password, $gender_value, $bool);
+    //         $stmt->execute();
+    //         $hashedlink = "http://blogsite.test/?getvlink=" . $hashed_mail . "&vmail=" . $usermail;
+    //         $linkmessage = "verify your E-mail for the registration";
+    //         echo json_encode([
+    //             "status" => true,
+    //             "message" => 'Registration Successful'
+    //         ]);
+    //         $verify = new mailer($usermail, $hashedlink, $linkmessage);
+    //         $verify->send_mail();
+    //         die;
+    //     } else {
+    //         echo json_encode([
+    //             "status" => false,
+    //             "number" => 1,
+    //             "message" => 'Password did not match'
+    //         ]);
+    //         die;
+    //     }
+    // }
 }
 
 if (isset($_POST['username'])) {
     $usermail = $_POST['username'];
     $_SESSION['activeUsermail'] = $usermail;
     $password = $_POST['password'];
-    $sql = "SELECT `usermail`,`verification` FROM users WHERE usermail = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $usermail);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
-    $valid = $row['verification'];
-    $count = $result->num_rows;
-    if ($count == 1) {
-        if ($valid == 0) {
-            echo json_encode([
-                "status" => false,
-                "message" => "unverified email!"
-            ]);
-            die;
-        } else {
-            $sql = "SELECT `username`, `password` FROM users WHERE usermail = ?";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("s", $usermail);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $row = $result->fetch_assoc();
-            $activeUser = $row['username'];
-            $usercode = $row['password'];
-            if (password_verify($password, $usercode)) {
-                $_SESSION['currentUser'] = $activeUser;
+    $logging  = new User($usermail, $password);
+    $checkmail = $logging->mail_indb();
+    if ($checkmail == true) {
+        $verfication = $logging->verify_mail();
+        if ($verfication == true) {
+            $access = $logging->login_User();
+            if ($access == true) {
                 echo json_encode([
                     "status" => true
                 ]);
@@ -93,6 +102,12 @@ if (isset($_POST['username'])) {
                 ]);
                 die;
             }
+        } else {
+            echo json_encode([
+                "status" => false,
+                "message" => "unverified email!"
+            ]);
+            die;
         }
     } else {
         echo json_encode([
@@ -101,6 +116,52 @@ if (isset($_POST['username'])) {
         ]);
         die;
     }
+    // $sql = "SELECT `usermail`,`verification` FROM users WHERE usermail = ?";
+    // $stmt = $conn->prepare($sql);
+    // $stmt->bind_param("s", $usermail);
+    // $stmt->execute();
+    // $result = $stmt->get_result();
+    // $row = $result->fetch_assoc();
+    // $valid = $row['verification'];
+    // $count = $result->num_rows;
+    // if ($count == 1) {
+    //     if ($valid == 0) {
+    //         echo json_encode([
+    //             "status" => false,
+    //             "message" => "unverified email!"
+    //         ]);
+    //         die;
+    //     } else {
+    //         $sql = "SELECT `username`, `password` FROM users WHERE usermail = ?";
+    //         $stmt = $conn->prepare($sql);
+    //         $stmt->bind_param("s", $usermail);
+    //         $stmt->execute();
+    //         $result = $stmt->get_result();
+    //         $row = $result->fetch_assoc();
+    //         $activeUser = $row['username'];
+    //         $usercode = $row['password'];
+    //         if (password_verify($password, $usercode)) {
+    //             $_SESSION['currentUser'] = $activeUser;
+    //             echo json_encode([
+    //                 "status" => true
+    //             ]);
+    //             die;
+    //         } else {
+    //             echo json_encode([
+    //                 "status" => false,
+    //                 "type" => 1,
+    //                 "message" => "Wrong password!"
+    //             ]);
+    //             die;
+    //         }
+    //     }
+    // } else {
+    //     echo json_encode([
+    //         "status" => false,
+    //         "message" => "User doesn't exist!"
+    //     ]);
+    //     die;
+    // }
 }
 if (isset($_POST['mail']) && isset($_POST['process'])) {
     $mailhere = $_POST['mail'];
