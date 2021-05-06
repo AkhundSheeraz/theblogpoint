@@ -42,6 +42,39 @@ class User
             }
         }
     }
+
+    function verify_mail(){
+        $sql = "SELECT `verification` FROM users WHERE usermail = ?";
+        $stmt = DB_connect::getConn()->prepare($sql);
+        $stmt->bind_param("s",$this->email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $verify = $row['verification'];
+        if($verify == 1){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    function login_User()
+    {
+        $sql = "SELECT `username`, `password` FROM users WHERE usermail = ?";
+        $stmt = DB_connect::getConn()->prepare($sql);
+        $stmt->bind_param("s",$this->email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $activeUser = $row['username'];
+        $userpascode = $row['password'];
+        if(password_verify($this->passcode,$userpascode)){
+            $_SESSION['currentUser'] = $activeUser;
+            return true;
+        }else{
+            return false;
+        }
+    }
 }
 
 $name = "sheeraz";
