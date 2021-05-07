@@ -99,11 +99,17 @@
         }).done(res => {
             const dblog = $(".d-blogs");
             if (document.URL.includes("blog.php")) {
+                if($(".d-blogs").children(".blog").length == 0){
+                    $(".noblog").remove();
+                }
                 dblog.append(res);
                 const deletebtn = $('.delbtn');
                 deletebtn.remove();
                 $('#staticBackdrop').modal('hide');
             } else {
+                if($(".d-blogs").children(".blog").length == 0){
+                    $(".noblog").remove();
+                }
                 dblog.append(res);
                 $('#staticBackdrop').modal('hide');
             }

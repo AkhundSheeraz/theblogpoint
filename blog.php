@@ -17,7 +17,7 @@ $countrow = $result->num_rows;
     <div class="d-blogs">
         <?php if ($countrow > 0) { ?>
             <?php while ($row = $result->fetch_assoc()) { ?>
-            <div class="my-2">
+            <div class="blog my-2">
                 <a class="viewlink" href="blogview.php?blogNo=<?php echo $row['blog_no']?>">
                     <h4 class="displayblog text-white"><?php echo $row['blog_title'] ?></h4>
                 </a>
@@ -28,7 +28,7 @@ $countrow = $result->num_rows;
             </div>
             <?php } ?>
         <?php } else { ?>
-            <h2 class="text-white">No blogs to display</h2>
+            <h2 class="noblog text-white">No blogs to display</h2>
         <?php } ?>
     </div>
 

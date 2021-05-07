@@ -36,7 +36,7 @@ if (isset($_POST['id'])) {
     <div class="d-blogs">
         <?php if ($count >= 1) { ?>
             <?php while ($row = $result->fetch_assoc()) { ?>
-                <div class="text-white my-2">
+                <div class="blog text-white my-2">
                     <div class="titlediv">
                         <a class="viewlink" href="blogview.php?blogNo=<?php echo $row['blog_no'] ?>">
                             <h4 class="displayblog text-white"><?php echo $row['blog_title'] ?></h4>
@@ -52,7 +52,7 @@ if (isset($_POST['id'])) {
                 </div>
             <?php } ?>
         <?php } else { ?>
-            <h2 class="text-white">You have no Blogs</h2>
+            <h2 class="noblog text-white">You have no Blogs</h2>
         <?php } ?>
     </div>
 

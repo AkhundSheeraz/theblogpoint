@@ -4,7 +4,7 @@ $blogtitle = $_POST['blogtitle'];
 $blogcontent = $_POST['blogcontent'];
 $usersmail = $_SESSION['activeUsermail'];
 $sql = "SELECT idusers FROM users WHERE usermail = ?";
-$stmt = $conn->prepare($sql);
+$stmt = DB_connect::getConn()->prepare($sql);
 $stmt->bind_param('s', $usersmail);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -12,10 +12,10 @@ $row = $result->fetch_assoc();
 $currentid = $row['idusers'];
 if (count($row) == 1) {
     $sql = "INSERT INTO blogs (`idusers`, `blog_title`, `blog_content`) VALUES (?,?,?)";
-    $stmt = $conn->prepare($sql);
+    $stmt = DB_connect::getConn()->prepare($sql);
     $stmt->bind_param('iss', $currentid, $blogtitle, $blogcontent);
     $stmt->execute();
-    $lastid = $conn->insert_id;
+    $lastid = DB_connect::getConn()->insert_id;
 ?>
     <div class="text-white my-2">
         <div class="titlediv">
