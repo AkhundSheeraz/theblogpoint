@@ -41,22 +41,23 @@ class User
             } else {
                 return false;
             }
-        }else{
+        } else {
             return false;
         }
     }
 
-    function verify_mail(){
+    function verify_mail()
+    {
         $sql = "SELECT `verification` FROM users WHERE usermail = ?";
         $stmt = DB_connect::getConn()->prepare($sql);
-        $stmt->bind_param("s",$this->email);
+        $stmt->bind_param("s", $this->email);
         $stmt->execute();
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
         $verify = $row['verification'];
-        if($verify == 1){
+        if ($verify == 1) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -65,25 +66,45 @@ class User
     {
         $sql = "SELECT `username`, `password` FROM users WHERE usermail = ?";
         $stmt = DB_connect::getConn()->prepare($sql);
-        $stmt->bind_param("s",$this->email);
+        $stmt->bind_param("s", $this->email);
         $stmt->execute();
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
         $activeUser = $row['username'];
         $userpascode = $row['password'];
-        if(password_verify($this->passcode,$userpascode)){
+        if (password_verify($this->passcode, $userpascode)) {
             $_SESSION['currentUser'] = $activeUser;
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    function send_vemail($message){
+    function send_vemail($message)
+    {
         $hashedmail = password_hash($this->email, PASSWORD_DEFAULT);
         $link = "http://blogsite.test/?getvlink=" . $hashedmail . "&vmail=" . $this->email;
-        $mailing = new mailer($this->email,$link,$message);
+        $mailing = new mailer($this->email, $link, $message);
         $mailing->send_mail();
     }
 }
 
+class forget_password
+{
+
+    public $user_email;
+
+    function __construct($user_email)
+    {
+        $this->mail = $user_email;
+    }
+
+    function reset_password()
+    {
+        $hashinmail = password_hash($this->mail, PASSWORD_DEFAULT);
+        $resetlink = "http://blogsite.test/forgetpass.php?rlink=" . $hashinmail . "&umail=" . $this->mail;
+        $resetmessage = "reset you password for account";
+        $mailing = new mailer($this->mail,$resetlink,$resetmessage);
+        $mailing->send_mail();
+    }
+}

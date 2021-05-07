@@ -79,15 +79,12 @@ if (isset($_POST['username'])) {
 
 if (isset($_POST['mail']) && isset($_POST['process'])) {
     $mailhere = $_POST['mail'];
-    $hashingmail = password_hash($mailhere, PASSWORD_DEFAULT);
-    $resetlink = "http://blogsite.test/forgetpass.php?rlink=" . $hashingmail . "&umail=" . $mailhere;
-    $resetmessage = "reset you password for account";
+    $forgetpassword = new forget_password($mailhere);
+    $forgetpassword->reset_password();
     echo json_encode([
         "status" => true,
         "message" => "recovery email sent"
     ]);
-    $reset = new mailer($mailhere, $resetlink, $resetmessage);
-    $reset->send_mail();
     die;
 }
 
