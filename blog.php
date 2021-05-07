@@ -28,7 +28,7 @@ $countrow = $result->num_rows;
             </div>
             <?php } ?>
         <?php } else { ?>
-            <h2 class="noblog text-white">No blogs to display</h2>
+            <h2 class="text-white">No blogs to display</h2>
         <?php } ?>
     </div>
 

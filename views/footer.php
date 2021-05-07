@@ -99,9 +99,6 @@
         }).done(res => {
             const dblog = $(".d-blogs");
             if (document.URL.includes("blog.php")) {
-                if($(".d-blogs").children(".blog").length == 0){
-                    $(".noblog").remove();
-                }
                 dblog.append(res);
                 const deletebtn = $('.delbtn');
                 deletebtn.remove();
@@ -128,7 +125,7 @@
         }
     })
 
-    $('.delbtn').on('click', function(event) { // "this" <- keyword only work with simple function not an arrow function
+    $('.d-blogs').on('click','.delbtn', function(event) { // "this" <- keyword only work with simple function not an arrow function
         event.preventDefault();
         const blogno = $(this).data('id');
         const parent = $(this).parent();
@@ -143,6 +140,9 @@
             res = JSON.parse(res);
             if (res.status == true) {
                 gparent.remove();
+                if($(".d-blogs").children(".blog").length == 0){
+                    $(".d-blogs").html("<h2 class='noblog text-white'>You have no Blogs</h2>");
+                }
             }
         });
     })
