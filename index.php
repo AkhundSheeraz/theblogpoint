@@ -1,4 +1,4 @@
-<?php require './classes.php'?>
+<?php require 'classes.php'?>
 
 <?php
 if (isset($_POST['name'])) {
@@ -25,7 +25,7 @@ if (isset($_POST['name'])) {
                 "status" => true,
                 "message" => 'Registration Successful'
             ]);
-            $create_user->send_vemail("verify your E-mail for the registration");
+            // $create_user->send_vemail("verify your E-mail for the registration");
             die;
         }else{
             echo json_encode([
@@ -45,7 +45,8 @@ if (isset($_POST['username'])) {
     $logging  = new User($usermail, $password);
     $checkmail = $logging->mail_indb();
     if ($checkmail == true) {
-        $verfication = $logging->verify_mail();
+        // $verfication = $logging->verify_mail();
+        $verfication = true;
         if ($verfication == true) {
             $access = $logging->login_User();
             if ($access == true) {

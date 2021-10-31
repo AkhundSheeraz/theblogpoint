@@ -5,7 +5,7 @@ class DB_connect
 {
     private static $host = "localhost";
     private static $user = "root";
-    private static $pass = "admin";
+    private static $pass = "killerweed218";
     private static $db = "blogsite_db";
 
     private static $conn = null;

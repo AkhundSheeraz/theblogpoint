@@ -1,7 +1,7 @@
 <nav id="navigation" class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a href="index.php">
-            <img class="logo" src="/img/blog.png" alt="logo">
+            <img class="logo" src="img/blog.png" alt="logo">
         </a>
         <a class="navbar-brand" href="index.php">The Blog Point</a>
         <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarSupportedContent">
@@ -27,7 +27,7 @@
                     <div class="modal-dialog frmwidth">
                         <form method="POST" id="register" class="modal-content modal-body px-2 position bg-dark" aria-labelledby="dropdownMenuButton2">
                             <div class="text-center">
-                                <img src="../img/new-user.png" class="w-50 my-1 invert" alt="user">
+                                <img src="img/new-user.png" class="w-50 my-1 invert" alt="user">
                             </div>
                             <input class="frminputs" type="text" name="name" placeholder="Name" required>
                             <input class="frminputs" type="email" name="email" placeholder="E-mail" required>
@@ -50,7 +50,7 @@
                     <div class="modal-dialog frmwidth">
                         <form method="POST" id="login" class="modal-content modal-body px-2 bg-dark" aria-labelledby="dropdownMenuButton1">
                             <div class="text-center">
-                                <img src="../img/userblack.png" class="w-50 my-1 invert" alt="user">
+                                <img src="img/userblack.png" class="w-50 my-1 invert" alt="user">
                             </div>
                             <input class="frminputs" type="email" name="username" placeholder="E-mail" required>
                             <input class="frminputs" type="password" name="password" placeholder="Password" required>

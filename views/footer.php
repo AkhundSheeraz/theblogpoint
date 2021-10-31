@@ -9,7 +9,7 @@
         event.preventDefault();
         const form = $('#register');
         $.ajax({
-            url: '/index.php',
+            url: 'index.php',
             type: 'POST',
             data: form.serialize()
         }).done(res => {
@@ -53,7 +53,7 @@
                 message: 'destroy session'
             }
         }).done(res => {
-            window.location.href = ("http://blogsite.test/index.php");
+            window.location.href = ("http://localhost/theblogpoint/index.php");
         })
     })
 
